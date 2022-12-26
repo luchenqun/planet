@@ -4,10 +4,12 @@ import { StdFee } from "@cosmjs/launchpad";
 import { SigningStargateClient } from "@cosmjs/stargate";
 import { Registry, OfflineSigner, EncodeObject, DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
 import { Api } from "./rest";
+import { MsgSendUpdatePost } from "./types/blog/tx";
 import { MsgSendIbcPost } from "./types/blog/tx";
 
 
 const types = [
+  ["/planet.blog.MsgSendUpdatePost", MsgSendUpdatePost],
   ["/planet.blog.MsgSendIbcPost", MsgSendIbcPost],
   
 ];
@@ -41,6 +43,7 @@ const txClient = async (wallet: OfflineSigner, { addr: addr }: TxClientOptions =
 
   return {
     signAndBroadcast: (msgs: EncodeObject[], { fee, memo }: SignAndBroadcastOptions = {fee: defaultFee, memo: ""}) => client.signAndBroadcast(address, msgs, fee,memo),
+    msgSendUpdatePost: (data: MsgSendUpdatePost): EncodeObject => ({ typeUrl: "/planet.blog.MsgSendUpdatePost", value: MsgSendUpdatePost.fromPartial( data ) }),
     msgSendIbcPost: (data: MsgSendIbcPost): EncodeObject => ({ typeUrl: "/planet.blog.MsgSendIbcPost", value: MsgSendIbcPost.fromPartial( data ) }),
     
   };

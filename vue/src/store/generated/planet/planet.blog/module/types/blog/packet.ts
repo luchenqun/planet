@@ -6,6 +6,8 @@ export const protobufPackage = "planet.blog";
 export interface BlogPacketData {
   noData: NoData | undefined;
   /** this line is used by starport scaffolding # ibc/packet/proto/field */
+  updatePostPacket: UpdatePostPacketData | undefined;
+  /** this line is used by starport scaffolding # ibc/packet/proto/field/number */
   ibcPostPacket: IbcPostPacketData | undefined;
 }
 
@@ -23,12 +25,31 @@ export interface IbcPostPacketAck {
   postID: string;
 }
 
+/** UpdatePostPacketData defines a struct for the packet payload */
+export interface UpdatePostPacketData {
+  postID: string;
+  title: string;
+  content: string;
+  creator: string;
+}
+
+/** UpdatePostPacketAck defines a struct for the packet acknowledgment */
+export interface UpdatePostPacketAck {
+  postID: string;
+}
+
 const baseBlogPacketData: object = {};
 
 export const BlogPacketData = {
   encode(message: BlogPacketData, writer: Writer = Writer.create()): Writer {
     if (message.noData !== undefined) {
       NoData.encode(message.noData, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.updatePostPacket !== undefined) {
+      UpdatePostPacketData.encode(
+        message.updatePostPacket,
+        writer.uint32(26).fork()
+      ).ldelim();
     }
     if (message.ibcPostPacket !== undefined) {
       IbcPostPacketData.encode(
@@ -48,6 +69,12 @@ export const BlogPacketData = {
       switch (tag >>> 3) {
         case 1:
           message.noData = NoData.decode(reader, reader.uint32());
+          break;
+        case 3:
+          message.updatePostPacket = UpdatePostPacketData.decode(
+            reader,
+            reader.uint32()
+          );
           break;
         case 2:
           message.ibcPostPacket = IbcPostPacketData.decode(
@@ -70,6 +97,16 @@ export const BlogPacketData = {
     } else {
       message.noData = undefined;
     }
+    if (
+      object.updatePostPacket !== undefined &&
+      object.updatePostPacket !== null
+    ) {
+      message.updatePostPacket = UpdatePostPacketData.fromJSON(
+        object.updatePostPacket
+      );
+    } else {
+      message.updatePostPacket = undefined;
+    }
     if (object.ibcPostPacket !== undefined && object.ibcPostPacket !== null) {
       message.ibcPostPacket = IbcPostPacketData.fromJSON(object.ibcPostPacket);
     } else {
@@ -82,6 +119,10 @@ export const BlogPacketData = {
     const obj: any = {};
     message.noData !== undefined &&
       (obj.noData = message.noData ? NoData.toJSON(message.noData) : undefined);
+    message.updatePostPacket !== undefined &&
+      (obj.updatePostPacket = message.updatePostPacket
+        ? UpdatePostPacketData.toJSON(message.updatePostPacket)
+        : undefined);
     message.ibcPostPacket !== undefined &&
       (obj.ibcPostPacket = message.ibcPostPacket
         ? IbcPostPacketData.toJSON(message.ibcPostPacket)
@@ -95,6 +136,16 @@ export const BlogPacketData = {
       message.noData = NoData.fromPartial(object.noData);
     } else {
       message.noData = undefined;
+    }
+    if (
+      object.updatePostPacket !== undefined &&
+      object.updatePostPacket !== null
+    ) {
+      message.updatePostPacket = UpdatePostPacketData.fromPartial(
+        object.updatePostPacket
+      );
+    } else {
+      message.updatePostPacket = undefined;
     }
     if (object.ibcPostPacket !== undefined && object.ibcPostPacket !== null) {
       message.ibcPostPacket = IbcPostPacketData.fromPartial(
@@ -280,6 +331,178 @@ export const IbcPostPacketAck = {
 
   fromPartial(object: DeepPartial<IbcPostPacketAck>): IbcPostPacketAck {
     const message = { ...baseIbcPostPacketAck } as IbcPostPacketAck;
+    if (object.postID !== undefined && object.postID !== null) {
+      message.postID = object.postID;
+    } else {
+      message.postID = "";
+    }
+    return message;
+  },
+};
+
+const baseUpdatePostPacketData: object = {
+  postID: "",
+  title: "",
+  content: "",
+  creator: "",
+};
+
+export const UpdatePostPacketData = {
+  encode(
+    message: UpdatePostPacketData,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.postID !== "") {
+      writer.uint32(10).string(message.postID);
+    }
+    if (message.title !== "") {
+      writer.uint32(18).string(message.title);
+    }
+    if (message.content !== "") {
+      writer.uint32(26).string(message.content);
+    }
+    if (message.creator !== "") {
+      writer.uint32(34).string(message.creator);
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): UpdatePostPacketData {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseUpdatePostPacketData } as UpdatePostPacketData;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.postID = reader.string();
+          break;
+        case 2:
+          message.title = reader.string();
+          break;
+        case 3:
+          message.content = reader.string();
+          break;
+        case 4:
+          message.creator = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): UpdatePostPacketData {
+    const message = { ...baseUpdatePostPacketData } as UpdatePostPacketData;
+    if (object.postID !== undefined && object.postID !== null) {
+      message.postID = String(object.postID);
+    } else {
+      message.postID = "";
+    }
+    if (object.title !== undefined && object.title !== null) {
+      message.title = String(object.title);
+    } else {
+      message.title = "";
+    }
+    if (object.content !== undefined && object.content !== null) {
+      message.content = String(object.content);
+    } else {
+      message.content = "";
+    }
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = String(object.creator);
+    } else {
+      message.creator = "";
+    }
+    return message;
+  },
+
+  toJSON(message: UpdatePostPacketData): unknown {
+    const obj: any = {};
+    message.postID !== undefined && (obj.postID = message.postID);
+    message.title !== undefined && (obj.title = message.title);
+    message.content !== undefined && (obj.content = message.content);
+    message.creator !== undefined && (obj.creator = message.creator);
+    return obj;
+  },
+
+  fromPartial(object: DeepPartial<UpdatePostPacketData>): UpdatePostPacketData {
+    const message = { ...baseUpdatePostPacketData } as UpdatePostPacketData;
+    if (object.postID !== undefined && object.postID !== null) {
+      message.postID = object.postID;
+    } else {
+      message.postID = "";
+    }
+    if (object.title !== undefined && object.title !== null) {
+      message.title = object.title;
+    } else {
+      message.title = "";
+    }
+    if (object.content !== undefined && object.content !== null) {
+      message.content = object.content;
+    } else {
+      message.content = "";
+    }
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = object.creator;
+    } else {
+      message.creator = "";
+    }
+    return message;
+  },
+};
+
+const baseUpdatePostPacketAck: object = { postID: "" };
+
+export const UpdatePostPacketAck = {
+  encode(
+    message: UpdatePostPacketAck,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.postID !== "") {
+      writer.uint32(10).string(message.postID);
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): UpdatePostPacketAck {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseUpdatePostPacketAck } as UpdatePostPacketAck;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.postID = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): UpdatePostPacketAck {
+    const message = { ...baseUpdatePostPacketAck } as UpdatePostPacketAck;
+    if (object.postID !== undefined && object.postID !== null) {
+      message.postID = String(object.postID);
+    } else {
+      message.postID = "";
+    }
+    return message;
+  },
+
+  toJSON(message: UpdatePostPacketAck): unknown {
+    const obj: any = {};
+    message.postID !== undefined && (obj.postID = message.postID);
+    return obj;
+  },
+
+  fromPartial(object: DeepPartial<UpdatePostPacketAck>): UpdatePostPacketAck {
+    const message = { ...baseUpdatePostPacketAck } as UpdatePostPacketAck;
     if (object.postID !== undefined && object.postID !== null) {
       message.postID = object.postID;
     } else {

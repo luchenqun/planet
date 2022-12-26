@@ -25,6 +25,7 @@ const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 type BlogPacketData struct {
 	// Types that are valid to be assigned to Packet:
 	//	*BlogPacketData_NoData
+	//	*BlogPacketData_UpdatePostPacket
 	//	*BlogPacketData_IbcPostPacket
 	Packet isBlogPacketData_Packet `protobuf_oneof:"packet"`
 }
@@ -71,12 +72,16 @@ type isBlogPacketData_Packet interface {
 type BlogPacketData_NoData struct {
 	NoData *NoData `protobuf:"bytes,1,opt,name=noData,proto3,oneof" json:"noData,omitempty"`
 }
+type BlogPacketData_UpdatePostPacket struct {
+	UpdatePostPacket *UpdatePostPacketData `protobuf:"bytes,3,opt,name=updatePostPacket,proto3,oneof" json:"updatePostPacket,omitempty"`
+}
 type BlogPacketData_IbcPostPacket struct {
 	IbcPostPacket *IbcPostPacketData `protobuf:"bytes,2,opt,name=ibcPostPacket,proto3,oneof" json:"ibcPostPacket,omitempty"`
 }
 
-func (*BlogPacketData_NoData) isBlogPacketData_Packet()        {}
-func (*BlogPacketData_IbcPostPacket) isBlogPacketData_Packet() {}
+func (*BlogPacketData_NoData) isBlogPacketData_Packet()           {}
+func (*BlogPacketData_UpdatePostPacket) isBlogPacketData_Packet() {}
+func (*BlogPacketData_IbcPostPacket) isBlogPacketData_Packet()    {}
 
 func (m *BlogPacketData) GetPacket() isBlogPacketData_Packet {
 	if m != nil {
@@ -92,6 +97,13 @@ func (m *BlogPacketData) GetNoData() *NoData {
 	return nil
 }
 
+func (m *BlogPacketData) GetUpdatePostPacket() *UpdatePostPacketData {
+	if x, ok := m.GetPacket().(*BlogPacketData_UpdatePostPacket); ok {
+		return x.UpdatePostPacket
+	}
+	return nil
+}
+
 func (m *BlogPacketData) GetIbcPostPacket() *IbcPostPacketData {
 	if x, ok := m.GetPacket().(*BlogPacketData_IbcPostPacket); ok {
 		return x.IbcPostPacket
@@ -103,6 +115,7 @@ func (m *BlogPacketData) GetIbcPostPacket() *IbcPostPacketData {
 func (*BlogPacketData) XXX_OneofWrappers() []interface{} {
 	return []interface{}{
 		(*BlogPacketData_NoData)(nil),
+		(*BlogPacketData_UpdatePostPacket)(nil),
 		(*BlogPacketData_IbcPostPacket)(nil),
 	}
 }
@@ -249,34 +262,153 @@ func (m *IbcPostPacketAck) GetPostID() string {
 	return ""
 }
 
+// UpdatePostPacketData defines a struct for the packet payload
+type UpdatePostPacketData struct {
+	PostID  string `protobuf:"bytes,1,opt,name=postID,proto3" json:"postID,omitempty"`
+	Title   string `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
+	Content string `protobuf:"bytes,3,opt,name=content,proto3" json:"content,omitempty"`
+	Creator string `protobuf:"bytes,4,opt,name=creator,proto3" json:"creator,omitempty"`
+}
+
+func (m *UpdatePostPacketData) Reset()         { *m = UpdatePostPacketData{} }
+func (m *UpdatePostPacketData) String() string { return proto.CompactTextString(m) }
+func (*UpdatePostPacketData) ProtoMessage()    {}
+func (*UpdatePostPacketData) Descriptor() ([]byte, []int) {
+	return fileDescriptor_bcaa85416e29107a, []int{4}
+}
+func (m *UpdatePostPacketData) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *UpdatePostPacketData) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_UpdatePostPacketData.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *UpdatePostPacketData) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_UpdatePostPacketData.Merge(m, src)
+}
+func (m *UpdatePostPacketData) XXX_Size() int {
+	return m.Size()
+}
+func (m *UpdatePostPacketData) XXX_DiscardUnknown() {
+	xxx_messageInfo_UpdatePostPacketData.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_UpdatePostPacketData proto.InternalMessageInfo
+
+func (m *UpdatePostPacketData) GetPostID() string {
+	if m != nil {
+		return m.PostID
+	}
+	return ""
+}
+
+func (m *UpdatePostPacketData) GetTitle() string {
+	if m != nil {
+		return m.Title
+	}
+	return ""
+}
+
+func (m *UpdatePostPacketData) GetContent() string {
+	if m != nil {
+		return m.Content
+	}
+	return ""
+}
+
+func (m *UpdatePostPacketData) GetCreator() string {
+	if m != nil {
+		return m.Creator
+	}
+	return ""
+}
+
+// UpdatePostPacketAck defines a struct for the packet acknowledgment
+type UpdatePostPacketAck struct {
+	PostID string `protobuf:"bytes,1,opt,name=postID,proto3" json:"postID,omitempty"`
+}
+
+func (m *UpdatePostPacketAck) Reset()         { *m = UpdatePostPacketAck{} }
+func (m *UpdatePostPacketAck) String() string { return proto.CompactTextString(m) }
+func (*UpdatePostPacketAck) ProtoMessage()    {}
+func (*UpdatePostPacketAck) Descriptor() ([]byte, []int) {
+	return fileDescriptor_bcaa85416e29107a, []int{5}
+}
+func (m *UpdatePostPacketAck) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *UpdatePostPacketAck) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_UpdatePostPacketAck.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *UpdatePostPacketAck) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_UpdatePostPacketAck.Merge(m, src)
+}
+func (m *UpdatePostPacketAck) XXX_Size() int {
+	return m.Size()
+}
+func (m *UpdatePostPacketAck) XXX_DiscardUnknown() {
+	xxx_messageInfo_UpdatePostPacketAck.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_UpdatePostPacketAck proto.InternalMessageInfo
+
+func (m *UpdatePostPacketAck) GetPostID() string {
+	if m != nil {
+		return m.PostID
+	}
+	return ""
+}
+
 func init() {
 	proto.RegisterType((*BlogPacketData)(nil), "planet.blog.BlogPacketData")
 	proto.RegisterType((*NoData)(nil), "planet.blog.NoData")
 	proto.RegisterType((*IbcPostPacketData)(nil), "planet.blog.IbcPostPacketData")
 	proto.RegisterType((*IbcPostPacketAck)(nil), "planet.blog.IbcPostPacketAck")
+	proto.RegisterType((*UpdatePostPacketData)(nil), "planet.blog.UpdatePostPacketData")
+	proto.RegisterType((*UpdatePostPacketAck)(nil), "planet.blog.UpdatePostPacketAck")
 }
 
 func init() { proto.RegisterFile("blog/packet.proto", fileDescriptor_bcaa85416e29107a) }
 
 var fileDescriptor_bcaa85416e29107a = []byte{
-	// 259 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x12, 0x4c, 0xca, 0xc9, 0x4f,
-	0xd7, 0x2f, 0x48, 0x4c, 0xce, 0x4e, 0x2d, 0xd1, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0xe2, 0x2e,
-	0xc8, 0x49, 0xcc, 0x4b, 0x2d, 0xd1, 0x03, 0xc9, 0x28, 0x4d, 0x64, 0xe4, 0xe2, 0x73, 0xca, 0xc9,
-	0x4f, 0x0f, 0x00, 0xab, 0x70, 0x49, 0x2c, 0x49, 0x14, 0xd2, 0xe5, 0x62, 0xcb, 0xcb, 0x07, 0xb1,
-	0x24, 0x18, 0x15, 0x18, 0x35, 0xb8, 0x8d, 0x84, 0xf5, 0x90, 0x34, 0xe8, 0xf9, 0x81, 0xa5, 0x3c,
-	0x18, 0x82, 0xa0, 0x8a, 0x84, 0xdc, 0xb8, 0x78, 0x33, 0x93, 0x92, 0x03, 0xf2, 0x8b, 0x4b, 0x20,
-	0x66, 0x48, 0x30, 0x81, 0x75, 0xc9, 0xa1, 0xe8, 0xf2, 0x44, 0x56, 0x01, 0x35, 0x00, 0x55, 0x9b,
-	0x13, 0x07, 0x17, 0x1b, 0xc4, 0x99, 0x4a, 0x1c, 0x5c, 0x6c, 0x10, 0x5b, 0x94, 0x62, 0xb9, 0x04,
-	0x31, 0x74, 0x0a, 0x89, 0x70, 0xb1, 0x96, 0x64, 0x96, 0xe4, 0xa4, 0x82, 0x9d, 0xc7, 0x19, 0x04,
-	0xe1, 0x08, 0x49, 0x70, 0xb1, 0x27, 0xe7, 0xe7, 0x95, 0xa4, 0xe6, 0x41, 0x1c, 0xc0, 0x19, 0x04,
-	0xe3, 0x82, 0x65, 0x8a, 0x52, 0x13, 0x4b, 0xf2, 0x8b, 0x24, 0x98, 0xa1, 0x32, 0x10, 0xae, 0x92,
-	0x16, 0x97, 0x00, 0x8a, 0xf1, 0x8e, 0xc9, 0xd9, 0x42, 0x62, 0x5c, 0x6c, 0x05, 0xf9, 0xc5, 0x25,
-	0x9e, 0x2e, 0x50, 0xe3, 0xa1, 0x3c, 0x27, 0xdd, 0x13, 0x8f, 0xe4, 0x18, 0x2f, 0x3c, 0x92, 0x63,
-	0x7c, 0xf0, 0x48, 0x8e, 0x71, 0xc2, 0x63, 0x39, 0x86, 0x0b, 0x8f, 0xe5, 0x18, 0x6e, 0x3c, 0x96,
-	0x63, 0x88, 0x12, 0x86, 0x78, 0x54, 0xbf, 0x42, 0x1f, 0x1c, 0xd6, 0x25, 0x95, 0x05, 0xa9, 0xc5,
-	0x49, 0x6c, 0xe0, 0xb0, 0x36, 0x06, 0x04, 0x00, 0x00, 0xff, 0xff, 0x0c, 0x00, 0x65, 0x47, 0x80,
-	0x01, 0x00, 0x00,
+	// 314 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x7c, 0x92, 0xc1, 0x4a, 0xc3, 0x40,
+	0x10, 0x86, 0xb3, 0xad, 0xc6, 0x76, 0x8a, 0xd2, 0x6e, 0x8b, 0xf4, 0xb4, 0x68, 0x4e, 0x22, 0x34,
+	0x05, 0x7d, 0x02, 0x43, 0x11, 0x7b, 0xd1, 0x12, 0xf0, 0x22, 0x78, 0xd8, 0xc4, 0xa5, 0x94, 0x86,
+	0xec, 0x92, 0x8c, 0x50, 0xdf, 0xc2, 0xc7, 0xf2, 0xd8, 0xa3, 0x47, 0x49, 0x5e, 0x44, 0xb2, 0x1b,
+	0x31, 0x69, 0x8d, 0xb7, 0x0c, 0xff, 0xff, 0x7f, 0xf9, 0x27, 0x19, 0x18, 0x04, 0x91, 0x5c, 0x4e,
+	0x15, 0x0f, 0xd7, 0x02, 0x5d, 0x95, 0x48, 0x94, 0xb4, 0xa7, 0x22, 0x1e, 0x0b, 0x74, 0x0b, 0xc5,
+	0xc9, 0x08, 0x9c, 0x78, 0x91, 0x5c, 0x2e, 0xb4, 0x63, 0xc6, 0x91, 0xd3, 0x09, 0xd8, 0xb1, 0x2c,
+	0x9e, 0xc6, 0xe4, 0x8c, 0x5c, 0xf4, 0xae, 0x86, 0x6e, 0x25, 0xe0, 0xde, 0x6b, 0xe9, 0xce, 0xf2,
+	0x4b, 0x13, 0x7d, 0x80, 0xfe, 0xab, 0x7a, 0xe1, 0x28, 0x16, 0x32, 0x45, 0x83, 0x19, 0xb7, 0x75,
+	0xf0, 0xbc, 0x16, 0x7c, 0xdc, 0x31, 0x95, 0x98, 0xbd, 0x30, 0xbd, 0x85, 0xe3, 0x55, 0x10, 0x56,
+	0x68, 0x2d, 0x4d, 0x63, 0x35, 0xda, 0xbc, 0xea, 0x28, 0x51, 0xf5, 0x98, 0xd7, 0x01, 0xdb, 0xec,
+	0xed, 0x74, 0xc0, 0x36, 0xb5, 0x9d, 0x67, 0x18, 0xec, 0x25, 0xe9, 0x08, 0x0e, 0x71, 0x85, 0x91,
+	0xd0, 0xfb, 0x76, 0x7d, 0x33, 0xd0, 0x31, 0x1c, 0x85, 0x32, 0x46, 0x11, 0x9b, 0x02, 0x5d, 0xff,
+	0x67, 0xd4, 0x4a, 0x22, 0x38, 0xca, 0x44, 0x2f, 0x5a, 0x28, 0x66, 0x74, 0x2e, 0xa1, 0x5f, 0xc3,
+	0xdf, 0x84, 0x6b, 0x7a, 0x0a, 0xb6, 0x92, 0x29, 0xce, 0x67, 0x25, 0xbe, 0x9c, 0x9c, 0x0d, 0x8c,
+	0xfe, 0xfa, 0x24, 0x4d, 0xfe, 0xdf, 0x96, 0xad, 0x86, 0x96, 0xed, 0xc6, 0x96, 0x07, 0xf5, 0x96,
+	0x13, 0x18, 0xee, 0xbe, 0xf9, 0x9f, 0xa2, 0xde, 0xe4, 0x23, 0x63, 0x64, 0x9b, 0x31, 0xf2, 0x95,
+	0x31, 0xf2, 0x9e, 0x33, 0x6b, 0x9b, 0x33, 0xeb, 0x33, 0x67, 0xd6, 0xd3, 0xd0, 0xfc, 0x91, 0xe9,
+	0x66, 0xaa, 0xaf, 0x0c, 0xdf, 0x94, 0x48, 0x03, 0x5b, 0x5f, 0xd9, 0xf5, 0x77, 0x00, 0x00, 0x00,
+	0xff, 0xff, 0x85, 0xe2, 0x50, 0x18, 0x7a, 0x02, 0x00, 0x00,
 }
 
 func (m *BlogPacketData) Marshal() (dAtA []byte, err error) {
@@ -350,6 +482,27 @@ func (m *BlogPacketData_IbcPostPacket) MarshalToSizedBuffer(dAtA []byte) (int, e
 		}
 		i--
 		dAtA[i] = 0x12
+	}
+	return len(dAtA) - i, nil
+}
+func (m *BlogPacketData_UpdatePostPacket) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *BlogPacketData_UpdatePostPacket) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	if m.UpdatePostPacket != nil {
+		{
+			size, err := m.UpdatePostPacket.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintPacket(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0x1a
 	}
 	return len(dAtA) - i, nil
 }
@@ -450,6 +603,87 @@ func (m *IbcPostPacketAck) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
+func (m *UpdatePostPacketData) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *UpdatePostPacketData) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *UpdatePostPacketData) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Creator) > 0 {
+		i -= len(m.Creator)
+		copy(dAtA[i:], m.Creator)
+		i = encodeVarintPacket(dAtA, i, uint64(len(m.Creator)))
+		i--
+		dAtA[i] = 0x22
+	}
+	if len(m.Content) > 0 {
+		i -= len(m.Content)
+		copy(dAtA[i:], m.Content)
+		i = encodeVarintPacket(dAtA, i, uint64(len(m.Content)))
+		i--
+		dAtA[i] = 0x1a
+	}
+	if len(m.Title) > 0 {
+		i -= len(m.Title)
+		copy(dAtA[i:], m.Title)
+		i = encodeVarintPacket(dAtA, i, uint64(len(m.Title)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.PostID) > 0 {
+		i -= len(m.PostID)
+		copy(dAtA[i:], m.PostID)
+		i = encodeVarintPacket(dAtA, i, uint64(len(m.PostID)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *UpdatePostPacketAck) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *UpdatePostPacketAck) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *UpdatePostPacketAck) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.PostID) > 0 {
+		i -= len(m.PostID)
+		copy(dAtA[i:], m.PostID)
+		i = encodeVarintPacket(dAtA, i, uint64(len(m.PostID)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
 func encodeVarintPacket(dAtA []byte, offset int, v uint64) int {
 	offset -= sovPacket(v)
 	base := offset
@@ -497,6 +731,18 @@ func (m *BlogPacketData_IbcPostPacket) Size() (n int) {
 	}
 	return n
 }
+func (m *BlogPacketData_UpdatePostPacket) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.UpdatePostPacket != nil {
+		l = m.UpdatePostPacket.Size()
+		n += 1 + l + sovPacket(uint64(l))
+	}
+	return n
+}
 func (m *NoData) Size() (n int) {
 	if m == nil {
 		return 0
@@ -528,6 +774,44 @@ func (m *IbcPostPacketData) Size() (n int) {
 }
 
 func (m *IbcPostPacketAck) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.PostID)
+	if l > 0 {
+		n += 1 + l + sovPacket(uint64(l))
+	}
+	return n
+}
+
+func (m *UpdatePostPacketData) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.PostID)
+	if l > 0 {
+		n += 1 + l + sovPacket(uint64(l))
+	}
+	l = len(m.Title)
+	if l > 0 {
+		n += 1 + l + sovPacket(uint64(l))
+	}
+	l = len(m.Content)
+	if l > 0 {
+		n += 1 + l + sovPacket(uint64(l))
+	}
+	l = len(m.Creator)
+	if l > 0 {
+		n += 1 + l + sovPacket(uint64(l))
+	}
+	return n
+}
+
+func (m *UpdatePostPacketAck) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -644,6 +928,41 @@ func (m *BlogPacketData) Unmarshal(dAtA []byte) error {
 				return err
 			}
 			m.Packet = &BlogPacketData_IbcPostPacket{v}
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field UpdatePostPacket", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowPacket
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthPacket
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthPacket
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			v := &UpdatePostPacketData{}
+			if err := v.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			m.Packet = &BlogPacketData_UpdatePostPacket{v}
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
@@ -889,6 +1208,266 @@ func (m *IbcPostPacketAck) Unmarshal(dAtA []byte) error {
 		}
 		if fieldNum <= 0 {
 			return fmt.Errorf("proto: IbcPostPacketAck: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field PostID", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowPacket
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthPacket
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthPacket
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.PostID = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipPacket(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthPacket
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *UpdatePostPacketData) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowPacket
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: UpdatePostPacketData: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: UpdatePostPacketData: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field PostID", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowPacket
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthPacket
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthPacket
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.PostID = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Title", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowPacket
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthPacket
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthPacket
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Title = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Content", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowPacket
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthPacket
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthPacket
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Content = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Creator", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowPacket
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthPacket
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthPacket
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Creator = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipPacket(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthPacket
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *UpdatePostPacketAck) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowPacket
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: UpdatePostPacketAck: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: UpdatePostPacketAck: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
